@@ -11,6 +11,7 @@ function App() {
   const [query, setQuery] = useState('cat')
 
   useEffect(() => {
+    const abortController = new AbortController()
     setIsLoaded(false)
     fetch(`https://api.unsplash.com/search/collections?page=${page}&limit=10&query=${query}&client_id=kQ_rA8Dd9Tb-JZ80Nx6RyFBtaoIFyaP5kdLn5EmGkVM`)
     .then(res => res.json())
@@ -22,6 +23,13 @@ function App() {
       })
     } )
     .then(data => setData(data))
+    .catch(err => {
+      setIsLoaded(true)
+      console.log(err.message);
+    })
+    return () => {
+      abortController.abort()
+    };
   },[page, query])
   
   return (
